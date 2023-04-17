@@ -31,11 +31,13 @@ app.post('/fishes', (req, res) => {
 
   db.query(query, values, (error, result) => {
     if (!(id_ikan && nama_ikan && jenis_ikan && berat_ikan)) {
-      response(400, null, "Mohon Diisi semua", res)
+      response(400, null, 'Mohon Diisi semua', res);
     }
 
-    const exist_id = 
-    response(200, result, 'Post data Berhasil', res);
+    // const exist_id =
+    else {
+      response(200, result, 'Post data Berhasil', res);
+    }
   });
 });
 
