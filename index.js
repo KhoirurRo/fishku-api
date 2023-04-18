@@ -9,6 +9,11 @@ const { nanoid } = require('nanoid');
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
+  console.log({ urlParam: req.query });
+  response(200, 'API ready', 'SUCCESS', res);
+});
+
+app.get('/fishes', (req, res) => {
   db.query('SELECT * from data_ikan ORDER BY nama_ikan', (error, result) => {
     response(200, result, 'get all data from data_ikan', res);
   });
@@ -30,6 +35,7 @@ app.post('/fishes', (req, res) => {
     }
   });
 });
+
 app.get('/fishes/:nama_ikan', (req, res) => {
   const { nama_ikan } = req.params;
   const query = `SELECT * from data_ikan where nama_ikan ="${nama_ikan}" `;
@@ -44,21 +50,6 @@ app.put('/fishesUpt', (req, res) => {
   db.query(query, (error, result) => {
     response(200, result, `Get data ${idIkan}`, res);
   });
-});
-
-app.get('/hello', (req, res) => {
-  console.log({ urlParam: req.query });
-  res.send('Hello World!');
-});
-
-app.post('/login', (req, res) => {
-  console.log({ requestFromOutside: req.body });
-  res.send('login berhasil');
-});
-
-app.put('/username', (req, res) => {
-  console.log({ updateData: req.body });
-  res.send('berhasil');
 });
 
 app.listen(port, () => {
