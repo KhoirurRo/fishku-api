@@ -51,7 +51,14 @@ app.get('/fishes/:nama_ikan', (req, res) => {
   });
 });
 
-app.put('/fishes', (req, res) => {});
+app.put('/fishesUpt', (req, res) => {
+  const { idIkan, namaIkan, jenisIkan, beratIkan } = req.body;
+  const query = `UPDATE data_ikan SET nama_ikan = '${namaIkan}', jenis_ikan = '${jenisIkan}', berat_ikan = '${beratIkan}' WHERE id_ikan = '${idIkan}'`
+  db.query(query, (error, result) => {
+    response(200, result, `Get data ${idIkan}`, res);
+  });
+});
+
 
 app.get('/hello', (req, res) => {
   console.log({ urlParam: req.query });
