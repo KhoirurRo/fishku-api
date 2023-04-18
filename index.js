@@ -19,6 +19,12 @@ app.get('/fishes', (req, res) => {
   });
 });
 
+app.get('/prices', (req, res) => {
+  db.query('SELECT * from harga_ikan', (error, result) => {
+    response(200, result, 'get all data from harga_ikan', res);
+  });
+});
+
 app.post('/fishes', (req, res) => {
   const id_ikan = nanoid(8);
   const { nama_ikan, jenis_ikan, berat_ikan } = req.body;
@@ -32,6 +38,23 @@ app.post('/fishes', (req, res) => {
       response(400, null, 'Mohon Diisi semua', res);
     } else {
       response(200, result, `Post data ${nama_ikan}  Berhasil`, res);
+    }
+  });
+});
+
+app.post('/prices', (req, res) => {
+  const id_harga_ikan = nanoid(8);
+  const { harga_per_kilo, id_ikan } = req.body;
+  const tgl_berlaku = new Date().toISOString();
+  const query =
+    'INSERT INTO harga_ikan (id_harga_ikan, harga_per_kilo, tgl_berlaku, id_ikan) VALUES (?, ?, ?, ?)';
+  const values = [id_harga_ikan, harga_per_kilo, tgl_berlaku, id_ikan];
+
+  db.query(query, values, (error, result) => {
+    if (!(harga_per_kilo && tgl_berlaku && id_ikan)) {
+      response(400, null, 'Mohon Diisi semua', res);
+    } else {
+      response(200, result, `Post data harga Berhasil`, res);
     }
   });
 });
@@ -53,6 +76,15 @@ app.put('/fishes/:id_ikan', (req, res) => {
   });
 });
 
+app.put('/prices/:id_harga_ikan', (req, res) => {
+  const { id_harga_ikan } = req.params;
+  const { harga_per_kilo, id_ikan } = req.body;
+  const query = `UPDATE harga_ikan SET harga_per_kilo = '${harga_per_kilo}', id_ikan = '${id_ikan}' WHERE id_ikan = '${id_harga_ikan}'`;
+  db.query(query, (error, result) => {
+    response(200, result, `Data harga dengan id ${id_harga_ikan} berhasil diubah`, res);
+  });
+});
+
 app.delete('/fishes/:id_ikan', (req, res) => {
   const { id_ikan } = req.params;
   const query = `DELETE FROM data_ikan WHERE id_ikan = '${id_ikan}'`;
@@ -60,6 +92,15 @@ app.delete('/fishes/:id_ikan', (req, res) => {
     response(200, result, `Data ikan ${id_ikan} was deleted`, res);
   });
 });
+
+app.delete('/prices/:id_harga_ikan', (req, res) => {
+  const { id_harga_ikan } = req.params;
+  const query = `DELETE FROM harga_ikan WHERE id_harga_ikan = '${id_harga_ikan}'`;
+  db.query(query, (error, result) => {
+    response(200, result, `Data ikan ${id_harga_ikan} was deleted`, res);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
