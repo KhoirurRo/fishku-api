@@ -44,14 +44,22 @@ app.get('/fishes/:nama_ikan', (req, res) => {
   });
 });
 
-app.put('/fishesUpt', (req, res) => {
-  const { idIkan, namaIkan, jenisIkan, beratIkan } = req.body;
-  const query = `UPDATE data_ikan SET nama_ikan = '${namaIkan}', jenis_ikan = '${jenisIkan}', berat_ikan = '${beratIkan}' WHERE id_ikan = '${idIkan}'`;
+app.put('/fishes/:id_ikan', (req, res) => {
+  const { id_ikan } = req.params;
+  const { nama_ikan, jenis_ikan, berat_ikan } = req.body;
+  const query = `UPDATE data_ikan SET nama_ikan = '${nama_ikan}', jenis_ikan = '${jenis_ikan}', berat_ikan = '${berat_ikan}' WHERE id_ikan = '${id_ikan}'`;
   db.query(query, (error, result) => {
-    response(200, result, `Get data ${idIkan}`, res);
+    response(200, result, `Get data ${id_ikan}`, res);
   });
 });
 
+app.delete('/fishes/:id_ikan', (req, res) => {
+  const { id_ikan } = req.params;
+  const query = `DELETE FROM data_ikan WHERE id_ikan = '${id_ikan}'`;
+  db.query(query, (error, result) => {
+    response(200, result, `Data ikan ${id_ikan} was deleted`, res);
+  });
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
